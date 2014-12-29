@@ -1,3 +1,4 @@
+// custom binding handler required for Google Maps API
 ko.bindingHandlers.googlemap = {
     init: function (element, valueAccessor) {
         var value = valueAccessor();

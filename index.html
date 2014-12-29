@@ -6,15 +6,23 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <title>Neighborhood Map Project</title>
     <style>
-		html, body, #map-canvas {
-			height: 100%;
-			margin: 0px;
-			padding: 0px
+		#map-canvas {
+			display: inline-block;
+		    width: 80%;
+		    height: 700px;
+		}
+		#data-column {
+			display: inline-block;
 		}
     </style>
 </head>
 <body>
 	<div id="map-canvas" data-bind="googlemap: {locations: locations, centerLat: 28.1217968, centerLon: -16.7339215}"></div>
+	<div id="data-column">
+		<ul  data-bind="foreach: locations">
+			<li data-bind="text: $data.name"></li>
+		</ul>
+	</div>
 
 	<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
