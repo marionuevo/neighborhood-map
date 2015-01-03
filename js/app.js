@@ -6,18 +6,23 @@ function viewModel() {
 	var service;
 	var request;
 
-	markers = ko.observableArray([]);
-	markers.subscribe (function (markers) {
-		createMarker(markers[markers.length-1]);        // last item added       
-	});
+	// Location class that store a place and the corresponding marker in the arrays locations
+	var Location = function (place, marker) {
+		this.place = place,
+		this.marker = marker
+	}
 
-    self.showdata = function (place) {
-        console.log(place);
-        google.maps.event.trigger(place, 'click');
-        //map.panTo(place.position);
-        //infoWindow.setContent(place.name);
-        //infoWindow.open(map, this);
-    }
+	locations = ko.observableArray([]);
+/*	locations.subscribe (function (locations) {
+		createMarker(locations[locations.length-1]);        // last item added       
+	});*/
+
+	self.showdata = function (location) {
+		google.maps.event.trigger(location.marker, 'click');
+		//map.panTo(location.marker.position);
+		//infoWindow.setContent(marker.name);
+		//infoWindow.open(map, this);
+	}
 
 	function mapInit(argument) {
 		var mapOptions = {
@@ -27,11 +32,11 @@ function viewModel() {
 		};
 		map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
 		  
-		// add markers to the map
-		for (var i in markers()) {
-			var latLng = new google.maps.LatLng (markers()[i].latitude, markers()[i].longitude);
+		// add locations to the map
+		/*for (var i in locations()) {
+			var latLng = new google.maps.LatLng (locations()[i].latitude, locations()[i].longitude);
 			var marker = new google.maps.Marker ({position: latLng, map: map});
-		}
+		}*/
 
 		// infoWindow
 		var infoWindowElement = document.getElementById('infoWindow');
@@ -54,11 +59,10 @@ function viewModel() {
 
 	
 
-	function callback(results, status) {
+	function callback(places, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			for (var i = 0; i < results.length; i++) {
-				//createMarker(results[i]);
-				markers.push(results[i]);
+			for (var i = 0; i < places.length; i++) {
+				createMarker (places[i]);
 			}
 		}
 	}
@@ -69,11 +73,12 @@ function viewModel() {
 			map: map,
 			position: place.geometry.location
 		});
+		locations.push(new Location(place, marker));
 
 		google.maps.event.addListener(marker, 'click', function() {
 			infoWindow.setContent(place.name);
 			infoWindow.open(map, this);
-			console.log(this);
+			map.panTo(marker.position);
 		});
 	}
 
@@ -83,9 +88,6 @@ function viewModel() {
 	var input = document.getElementById('input');
 	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 	var searchBox = new google.maps.places.SearchBox(input);
-
-
-	
 };
 
 ko.applyBindings (new viewModel ());

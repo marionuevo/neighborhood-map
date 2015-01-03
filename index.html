@@ -62,10 +62,10 @@
 	<div id="dataColumn">
 		<input id="input" class="controls" type="text" placeholder="Search Box">
 
-		<ul data-bind="foreach: markers" id="dataList">
+		<ul data-bind="foreach: locations" id="dataList">
 			<li data-bind="click: $root.showdata">
 				<hr>
-				<span data-bind="text: $data.name"></span>
+				<span data-bind="text: $data.place.name"></span>
 			</li>
 		</ul>
 
