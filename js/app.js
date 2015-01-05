@@ -4,9 +4,8 @@ function viewModel() {
 	var map;
 	var infoWindow;
 	var service;
-	var request;
 
-	// Location class that store a place and the corresponding marker in the arrays locations
+	// Location class that store a place and the corresponding marker in the locations array
 	var Location = function (place, marker) {
 		this.place = place,
 		this.marker = marker
@@ -44,10 +43,10 @@ function viewModel() {
 			content: infoWindowElement
 		};
 		infoWindow = new google.maps.InfoWindow (infoOptions);
-		infoWindow.open(map);
+		//infoWindow.open(map);
 
 		// search places service
-		request = {
+		var request = {
 			location: adeje,
 			radius: 500,
 			types: ['store']
@@ -56,8 +55,6 @@ function viewModel() {
 		service = new google.maps.places.PlacesService(map);
 		service.nearbySearch(request, callback);
 	}
-
-	
 
 	function callback(places, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -76,9 +73,10 @@ function viewModel() {
 		locations.push(new Location(place, marker));
 
 		google.maps.event.addListener(marker, 'click', function() {
-			infoWindow.setContent(place.name);
+			infoWindow.setContent('<h3>'+place.name+'</h3>'+'<div>'+place.vicinity+'</div>');
 			infoWindow.open(map, this);
 			map.panTo(marker.position);
+			console.dir(place);
 		});
 	}
 

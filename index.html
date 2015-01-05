@@ -52,7 +52,10 @@
 			background-color: #eee;
 			border-radius: 2px;
 
-		} 
+		}
+		#infoWindow {
+
+		}
     </style>
 </head>
 <body>
@@ -65,7 +68,7 @@
 		<ul data-bind="foreach: locations" id="dataList">
 			<li data-bind="click: $root.showdata">
 				<hr>
-				<span data-bind="text: $data.place.name"></span>
+				<div data-bind="text: $data.place.name"></div>
 			</li>
 		</ul>
 
