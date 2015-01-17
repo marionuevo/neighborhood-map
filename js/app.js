@@ -27,9 +27,31 @@ function viewModel() {
 		var mapOptions = {
 			zoom: 15,
 			center: adeje,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			panControl: false,
+			zoomControl: true,
+			zoomControlOptions: {
+				position: google.maps.ControlPosition.LEFT_BOTTOM
+			},
+			mapTypeControl: false,
+			scaleControl: true,
+			streetViewControl: false,
+			overviewMapControl: false
 		};
-		map = new google.maps.Map(document.getElementById('mapCanvas'), mapOptions);
+		map = new google.maps.Map($('#mapCanvas')[0], mapOptions);
+	
+
+		$('#mapCanvas').css('height', $(window).height());
+		$('.scrollable-menu').css('max-height', $(window).height()-36);
+		$('.scrollable-menu').css('max-width', $(window).width());
+
+		$(window).resize(function() {
+			$('#mapCanvas').css('height', $(window).height());
+			$('.scrollable-menu').css('max-height', $(window).height()-36);
+			$('.scrollable-menu').css('max-width', $(window).width());
+			//google.maps.event.trigger(map, 'resize');
+
+		});
 		  
 		// add locations to the map
 		/*for (var i in locations()) {
@@ -38,7 +60,7 @@ function viewModel() {
 		}*/
 
 		// infoWindow
-		var infoWindowElement = document.getElementById('infoWindow');
+		var infoWindowElement = $('#infoWindow')[0];
 		var infoOptions = {
 			content: infoWindowElement
 		};
@@ -48,7 +70,7 @@ function viewModel() {
 		// search places service
 		var request = {
 			location: adeje,
-			radius: 500,
+			radius: 1500,
 			types: ['store']
 		};
 
@@ -73,18 +95,21 @@ function viewModel() {
 		locations.push(new Location(place, marker));
 
 		google.maps.event.addListener(marker, 'click', function() {
-			infoWindow.setContent('<h3>'+place.name+'</h3>'+'<div>'+place.vicinity+'</div>');
+			var streetviewURL = 'https://maps.googleapis.com/maps/api/streetview?size=240x160&location=' + place.geometry.location;
+    		//$body.append('<img class="bgimg" src="' + streetviewURL + '">');
+
+			infoWindow.setContent('<h4>' + place.name+ '</h4>' + '<div>' + place.vicinity + '</div>' + 
+				'<span><img class="img-responsive img-thumbnail" alt="Responsive image" src="' + streetviewURL + '"></span>' );
 			infoWindow.open(map, this);
 			map.panTo(marker.position);
-			console.dir(place);
 		});
 	}
 
 	mapInit ();
 
 	// search box provided by Google API
-	var input = document.getElementById('input');
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+	var input = $('#input')[0];
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 	var searchBox = new google.maps.places.SearchBox(input);
 };
 
