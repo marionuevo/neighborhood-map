@@ -12,15 +12,9 @@ function viewModel() {
 	}
 
 	locations = ko.observableArray([]);
-/*	locations.subscribe (function (locations) {
-		createMarker(locations[locations.length-1]);        // last item added       
-	});*/
 
 	self.showdata = function (location) {
 		google.maps.event.trigger(location.marker, 'click');
-		//map.panTo(location.marker.position);
-		//infoWindow.setContent(marker.name);
-		//infoWindow.open(map, this);
 	}
 
 	function mapInit(argument) {
@@ -49,15 +43,8 @@ function viewModel() {
 			$('#mapCanvas').css('height', $(window).height());
 			$('.scrollable-menu').css('max-height', $(window).height()-36);
 			$('.scrollable-menu').css('max-width', $(window).width());
-			//google.maps.event.trigger(map, 'resize');
 
 		});
-		  
-		// add locations to the map
-		/*for (var i in locations()) {
-			var latLng = new google.maps.LatLng (locations()[i].latitude, locations()[i].longitude);
-			var marker = new google.maps.Marker ({position: latLng, map: map});
-		}*/
 
 		// infoWindow
 		var infoWindowElement = $('#infoWindow')[0];
@@ -65,7 +52,6 @@ function viewModel() {
 			content: infoWindowElement
 		};
 		infoWindow = new google.maps.InfoWindow (infoOptions);
-		//infoWindow.open(map);
 
 		// search places service
 		var request = {
@@ -96,7 +82,6 @@ function viewModel() {
 
 		google.maps.event.addListener(marker, 'click', function() {
 			var streetviewURL = 'https://maps.googleapis.com/maps/api/streetview?size=240x160&location=' + place.geometry.location;
-    		//$body.append('<img class="bgimg" src="' + streetviewURL + '">');
 
 			infoWindow.setContent('<h4>' + place.name+ '</h4>' + '<div>' + place.vicinity + '</div>' + 
 				'<span><img class="img-responsive img-thumbnail" alt="Responsive image" src="' + streetviewURL + '"></span>' );
