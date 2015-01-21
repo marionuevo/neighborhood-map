@@ -56,8 +56,8 @@ function viewModel() {
 		// search places service
 		var request = {
 			location: adeje,
-			radius: 1500,
-			types: ['store']
+			radius: 800
+			/*types: ['store']*/
 		};
 
 		service = new google.maps.places.PlacesService(map);
@@ -72,19 +72,39 @@ function viewModel() {
 		}
 	}
 
+
 	function createMarker(place) {
+		// For each place, get the icon, place name, and location.
 		var placeLoc = place.geometry.location;
+		var image = {
+				url: place.icon,
+				size: new google.maps.Size(71, 71),
+				origin: new google.maps.Point(0, 0),
+				anchor: new google.maps.Point(17, 34),
+				scaledSize: new google.maps.Size(25, 25)
+			};
 		var marker = new google.maps.Marker({
 			map: map,
+			icon: image,
+			title: place.name,
 			position: place.geometry.location
 		});
 		locations.push(new Location(place, marker));
 
 		google.maps.event.addListener(marker, 'click', function() {
-			var streetviewURL = 'https://maps.googleapis.com/maps/api/streetview?size=240x160&location=' + place.geometry.location;
+			var request = {
+				placeId: place.place_id
+			};
+			service.getDetails(request, function(place, status) {
+			    if (status == google.maps.places.PlacesServiceStatus.OK) {
+			    	var streetviewURL = 'https://maps.googleapis.com/maps/api/streetview?size=128x128&location=' + place.geometry.location;
 
-			infoWindow.setContent('<h4>' + place.name+ '</h4>' + '<div>' + place.vicinity + '</div>' + 
-				'<span><img class="img-responsive img-thumbnail" alt="Responsive image" src="' + streetviewURL + '"></span>' );
+					infoWindow.setContent('<div class="media"><div class="pull-left" href="#"><img class="media-object img-thumbnail" src="' + streetviewURL +
+											 '" alt="streetview image"></div><div class="media-body"><h4 class="media-heading">' + place.name +
+											 '</h4>' + place.vicinity + '<br>'+ place.formatted_phone_number +'<br><a href="' + place.url + '">Google+</a>' +'</div></div>');
+					
+			    }
+			  });
 			infoWindow.open(map, this);
 			map.panTo(marker.position);
 		});
@@ -96,6 +116,36 @@ function viewModel() {
 	var input = $('#input')[0];
 	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(input);
 	var searchBox = new google.maps.places.SearchBox(input);
+
+	// Listen for the event fired when the user selects an item from the
+	// pick list. Retrieve the matching places for that item.
+	google.maps.event.addListener(searchBox, 'places_changed', function() {
+		var places = searchBox.getPlaces();
+		if (places.length == 0) {
+			return;
+		}
+
+		for (var i = 0; i < locations().length; i++) {
+			locations()[i].marker.setMap(null);
+		}
+	
+		locations([]);
+		var bounds = new google.maps.LatLngBounds();
+		for (var i = 0; i < places.length; i++) {
+			createMarker (places[i]);
+			bounds.extend(places[i].geometry.location);
+		}
+		map.fitBounds(bounds);
+	});
+
+	// Bias the SearchBox results towards places that are within the bounds of the
+	// current map's viewport.
+	google.maps.event.addListener(map, 'bounds_changed', function() {
+		var bounds = map.getBounds();
+		searchBox.setBounds(bounds);
+	});
+
 };
 
 ko.applyBindings (new viewModel ());
+
