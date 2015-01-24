@@ -4,33 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <title>Neighborhood Map Project</title>
     <style>
+/*    	html, body {
+		  height: 100%;
+		}*/
+		body {
+		  padding: 50px 0 0 0;
+		}
+
+		.navmenu {
+		  padding-top: 50px;
+		}
+
+		.navbar {
+		  display: block;
+		  text-align: center;
+		}
+		.navbar-brand {
+		  display: inline-block;
+		  float: none;
+		}
+		.navbar-toggle {
+		  position: absolute;
+		  float: left;
+		  margin-left: 15px;
+		}
+
+		.container {
+		  max-width: 100%;
+		}
+
+		@media (min-width: 1px) {
+		  .navbar-toggle {
+		    display: block !important;
+		  }
+		}
+
+		@media (min-width: 992px) {
+		  body {
+		    padding: 0 0 0 300px;
+		  }
+		  .navmenu {
+		    padding-top: 0;
+		  }
+		  .navbar {
+		    display: none !important; /* IE8 fix */
+		  }
+		}
+
 		#mapCanvas {
 			display: inline-block;
 		    width: 100%;
 		}
-		#infoWindow {
-
-		}
 		.container-fluid .col-sm-12 {
 			padding: 0 0 0 0;
 		}
-		.dropdown {
+/*		.dropdown {
 			position: fixed;
 			top: 0;
 			left: 0;
-		}
+		}*/
 		.scrollable-menu {
 			height: auto;
 			max-width: 200px;
 			overflow-x: hidden;
 		}
 		.form-control {
-			width: 150px;
+			width: 200px;
 		}
     </style>
+
 </head>
 <body>
 	<div class="container-fluid">
@@ -43,7 +89,30 @@
 			</div>
 			<input id="input" class="controls form-control" type="text" placeholder="Search Box">
 
-			<div class="dropdown">
+			<div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
+				<a class="navmenu-brand visible-md visible-lg" href="#">Popular Business in Adeje</a>
+				<div class="nav navmenu-nav list-group scrollable-menu" data-bind="foreach: locations">
+					<!-- <li class="active"><a href="#">Home</a></li> -->
+					<a class="list-group-item" href="#" data-bind="click: $root.showdata, text: $data.place.name"></a>
+				</div>
+			</div>
+
+			<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg" >
+				<button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Popular Business in Adeje</a>
+			</div>
+
+<!-- 			<div class="list-group" data-bind="foreach: locations" id="dataList">
+				<a href="#" class="list-group-item" data-bind="click: $root.showdata" data-bind="text: $data.place.name"></a>
+			</div> -->
+
+
+
+			<!-- <div class="dropdown">
 
 				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 					Popular Business in Adeje <span class="badge" data-bind="text: locations().length"></span>
@@ -56,13 +125,14 @@
 						</li>
 					</ul>
 
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jasny-bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
 </body>

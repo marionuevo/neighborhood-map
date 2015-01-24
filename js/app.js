@@ -36,12 +36,12 @@ function viewModel() {
 	
 
 		$('#mapCanvas').css('height', $(window).height());
-		$('.scrollable-menu').css('max-height', $(window).height()-36);
+		$('.scrollable-menu').css('max-height', $(window).height()-70);
 		$('.scrollable-menu').css('max-width', $(window).width());
 
 		$(window).resize(function() {
 			$('#mapCanvas').css('height', $(window).height());
-			$('.scrollable-menu').css('max-height', $(window).height()-36);
+			$('.scrollable-menu').css('max-height', $(window).height()-70);
 			$('.scrollable-menu').css('max-width', $(window).width());
 
 		});
