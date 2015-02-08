@@ -6,3 +6,6 @@ Then, you might search for additional or special type of bussines, eg: restauran
 using the SearchBox.
 On the left places list, you can click to display details and a Streetview thumbnail of 
 that place. You can click on the place directly on the map, as well.
+
+Resources used:
+https://developers.google.com/maps/documentation/javascript/reference?hl=es
