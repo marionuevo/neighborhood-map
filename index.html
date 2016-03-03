@@ -1,136 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
-		<title>Neighborhood Map Project</title>
-		<style>
-			body {
-				padding: 50px 0 0 0;
-			}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/jasny-bootstrap.min.css">
+        <title>Neighborhood Map Project</title>
+        <style>
+            body {
+                padding: 50px 0 0 0;
+            }
 
-			#mapCanvas {
-				display: inline-block;
-				width: 100%;
-			}
+            #mapCanvas {
+                display: inline-block;
+                width: 100%;
+            }
 
-			.navmenu {
-				padding-top: 50px;
-			}
+            .navmenu {
+                padding-top: 50px;
+            }
 
-			.navbar {
-				display: block;
-				text-align: center;
-			}
-			.navbar-brand {
-				display: inline-block;
-				float: none;
-			}
-			.navbar-toggle {
-				position: absolute;
-				float: left;
-				margin-left: 15px;
-			}
+            .navbar {
+                display: block;
+                text-align: center;
+            }
+            .navbar-brand {
+                display: inline-block;
+                float: none;
+            }
+            .navbar-toggle {
+                position: absolute;
+                float: left;
+                margin-left: 15px;
+            }
 
-			.container {
-				max-width: 100%;
-			}
+            .container {
+                max-width: 100%;
+            }
 
-			.container-fluid .col-sm-12 {
-				padding: 0 0 0 0;
-			}
-			.scrollable-menu {
-				height: auto;
-				max-width: 200px;
-				overflow-x: hidden;
-			}
-			.form-control {
-				width: 290px;
-			}
-			.controls {
-				margin: 10px 0 0 15px;
-				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-			}
+            .container-fluid .col-sm-12 {
+                padding: 0 0 0 0;
+            }
+            .scrollable-menu {
+                height: auto;
+                max-width: 200px;
+                overflow-x: hidden;
+            }
+            .form-control {
+                width: 290px;
+            }
+            .controls {
+                margin: 10px 0 0 15px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
 
 
-			@media (min-width: 1px) {
-				.navbar-toggle {
-					display: block !important;
-				}
-			}
+            @media (min-width: 1px) {
+                .navbar-toggle {
+                    display: block !important;
+                }
+            }
 
-			@media (min-width: 992px) {
-				body {
-					padding: 0 0 0 300px;
-				}
-				.navmenu {
-					padding-top: 0;
-				}
-				.navbar {
-					display: none !important; /* IE8 fix */
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container-fluid">
+            @media (min-width: 992px) {
+                body {
+                    padding: 0 0 0 300px;
+                }
+                .navmenu {
+                    padding-top: 0;
+                }
+                .navbar {
+                    display: none !important; /* IE8 fix */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
 
-			<div id="alert-modal" class="modal fade">
-			  <div class="modal-dialog">
-				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Ooooops!</h4>
-				  </div>
-				  <div class="modal-body">
-					<div class="alert alert-danger" role="alert">
-						<p>Can't connect to Google API server.</p>
-						<p>Please check your network and reload the page when done.</p>
-					</div>
-					
-				  </div>
-				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
+            <div id="alert-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Ooooops!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <p>Can't connect to Google API server.</p>
+                                <p>Please check your network and reload the page when done.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="row">
-				<div class="col-sm-12">
-					<div id="infoWindow"></div>
-					<div id="mapCanvas"></div>
-				</div>
-				
-				<div>
-					<input id="input" class="controls form-control" type="text" placeholder="Search Box">
-				</div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="infoWindow"></div>
+                    <div id="mapCanvas"></div>
+                </div>
 
-				<div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
-					<a class="navmenu-brand visible-md visible-lg" href="#">Popular Business</a>
-					<div class="nav navmenu-nav list-group scrollable-menu" data-bind="foreach: locations">
-						<a id="item-list" class="list-group-item" href="#" data-bind="click: $root.showdata, text: $data.place.name, css: { active: $data.active }"></a>
-					</div>
-				</div>
+                <div>
+                    <input id="input" class="controls form-control" type="text" placeholder="Search Box">
+                </div>
 
-				<div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg">
-					<button id="menu-button" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">Popular Business</a>
-				</div>
-			</div>
-		</div>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
-		<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-		<script type="text/javascript" src="js/jQuery.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="js/jasny-bootstrap.min.js"></script>
-		<script type="text/javascript" src="js/knockout-3.2.0.js"></script>
-		<script type="text/javascript" src="js/app.js"></script>
-	</body>
+                <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
+                    <a class="navmenu-brand visible-md visible-lg" href="#">Popular Business</a>
+                    <div class="nav navmenu-nav list-group scrollable-menu" data-bind="foreach: locations">
+                        <a id="item-list" class="list-group-item" href="#" data-bind="click: $root.showdata, text: $data.place.name, css: { active: $data.active }"></a>
+                    </div>
+                </div>
+
+                <div class="navbar navbar-default navbar-fixed-top hidden-md hidden-lg">
+                    <button id="menu-button" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Popular Business</a>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+        <script type="text/javascript" src="js/jQuery.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/jasny-bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/knockout-3.2.0.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+    </body>
 </html>
