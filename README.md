@@ -7,7 +7,7 @@ This SPA starts with a map containing the more popular business in Adeje, Canary
 To launch the application, just open index.html in your preferred browser.
 Also, the site is live at http://marionuevo.github.io/neighborhood-map/
 
-At the begining, the application launch a default search with any type of business located in Adeje.
+At the beginning, the application launch a default search with any type of business located in Adeje.
 
 Then, you might search for additional or special type of business, eg: restaurants or bars...
 using the SearchBox on the top left. eg: type "restaurants" and press Enter or click on one
