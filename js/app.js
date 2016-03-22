@@ -87,15 +87,19 @@ function viewModel() {
         map = new google.maps.Map($('#mapCanvas')[0], mapOptions);
 
         // set map to full size and places list to full height
-        $('#mapCanvas').css('height', $(window).height()-50);
-        $('.scrollable-menu').css('max-height', $(window).height()-70);
-        $('.scrollable-menu').css('max-width', $(window).width());
-
-        // ensure the map is full size and places list to full height after a window resize event
-        $(window).resize(function() {
-            $('#mapCanvas').css('height', $(window).height()-50);
+        function setMapSize() {
+            if ($(window).width() < 992) {
+                $('#mapCanvas').css('height', $(window).height()-50);
+            } else {
+                $('#mapCanvas').css('height', $(window).height());
+            }
             $('.scrollable-menu').css('max-height', $(window).height()-70);
             $('.scrollable-menu').css('max-width', $(window).width());
+        }
+        setMapSize();
+        // ensure the map is full size and places list to full height after a window resize event
+        $(window).resize(function() {
+            setMapSize();
         });
 
         // Google API infoWindow
@@ -237,7 +241,6 @@ function viewModel() {
     google.maps.event.addListener(map, 'bounds_changed', function() {
         searchBox.setBounds(map.getBounds());
     });
-
 }
 
 ko.applyBindings (new viewModel ());
