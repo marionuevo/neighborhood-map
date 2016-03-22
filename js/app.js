@@ -29,7 +29,10 @@ function viewModel() {
     // Observable knockout variable to link with filter input
     filterBox = ko.observable('');
 
-    // Search function algorithm
+    /** Search function algorithm invoked upon keydown at the filter box
+      *
+      * @returns nothing.
+      */
     filterBox.subscribe(function() {
         for (i = 0; i < locations().length; i++) {
             if (locations()[i].place.name.toLowerCase().indexOf(filterBox().toLowerCase()) == -1) {
@@ -60,7 +63,7 @@ function viewModel() {
       * @returns nothing.
       */
     function resetActiveLocations() {
-        for (var i=0; i < locations().length; i++) {
+        for (var i = 0; i < locations().length; i++) {
             locations()[i].active(false);
         }
     }
@@ -192,7 +195,7 @@ function viewModel() {
         }
     }
 
-    mapInit ();
+    mapInit();
 
     // search box provided by Google API
     // the following line selects the htmlinput with "input" id element form the DOM using jQuery
