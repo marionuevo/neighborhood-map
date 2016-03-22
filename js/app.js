@@ -20,10 +20,27 @@ function viewModel() {
         this.place = place;
         this.marker = marker;
         this.active = ko.observable(false);
+        this.visible = ko.observable(true);
     };
 
     // Observable knockout array where we store locations
     locations = ko.observableArray([]);
+
+    // Observable knockout variable to link with filter input
+    filterBox = ko.observable('');
+
+    // Search function algorithm
+    filterBox.subscribe(function() {
+        for (i = 0; i < locations().length; i++) {
+            if (locations()[i].place.name.toLowerCase().indexOf(filterBox().toLowerCase()) == -1) {
+                locations()[i].visible(false);
+                locations()[i].marker.setMap(null);
+            } else {
+                locations()[i].visible(true);
+                locations()[i].marker.setMap(map);
+            }
+        }
+    });
 
     /** Invoke click trigger when user clicks over a location list item.
       * Also close the list if the screen is in "mobile" mode.
@@ -70,13 +87,13 @@ function viewModel() {
         map = new google.maps.Map($('#mapCanvas')[0], mapOptions);
 
         // set map to full size and places list to full height
-        $('#mapCanvas').css('height', $(window).height());
+        $('#mapCanvas').css('height', $(window).height()-50);
         $('.scrollable-menu').css('max-height', $(window).height()-70);
         $('.scrollable-menu').css('max-width', $(window).width());
 
         // ensure the map is full size and places list to full height after a window resize event
         $(window).resize(function() {
-            $('#mapCanvas').css('height', $(window).height());
+            $('#mapCanvas').css('height', $(window).height()-50);
             $('.scrollable-menu').css('max-height', $(window).height()-70);
             $('.scrollable-menu').css('max-width', $(window).width());
         });
@@ -118,7 +135,6 @@ function viewModel() {
       */
     function createMarker(place) {
         // For each place, get the icon, place name, and location.
-        var placeLoc = place.geometry.location;
         var image = {
                 url: place.icon,
                 size: new google.maps.Size(71, 71),
@@ -179,6 +195,7 @@ function viewModel() {
     var input = $('#input')[0];
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(filter);
     var searchBox = new google.maps.places.SearchBox(input);
 
     // Listen for the event fired when the user selects an item from the search box
