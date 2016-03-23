@@ -15,6 +15,9 @@ function viewModel() {
     var infoWindow;
     var service;
 
+    // API key used to fecth weather data from Weather Underground
+    var WUG_API_KEY = 'dddb0254da9d9994';
+
     // Location class that store a place and the corresponding marker in the locations array
     var Location = function (place, marker) {
         this.place = place;
@@ -108,7 +111,8 @@ function viewModel() {
         // Google API infoWindow
         var infoWindowElement = $('#infoWindow')[0];
         var infoOptions = {
-            content: infoWindowElement
+            content: infoWindowElement,
+            pixelOffset: new google.maps.Size(-25, 0)
         };
         infoWindow = new google.maps.InfoWindow (infoOptions);
 
@@ -171,27 +175,47 @@ function viewModel() {
     }
 
     /** Function called when details requested are given.
-      * It creates the infowindow html content.
-
+      * It creates the infowindow html content, and make an
+      * ajax call to retrieve whether information (3rd party API)
+      *
       * @returns nothing.
       */
     function callBack_createInfoWindow(place, status) {
-        // error check
+        // google API error check
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            var streetviewURL = 'https://maps.googleapis.com/maps/api/streetview?size=128x128&location=' +
-                place.geometry.location;
-            var contentString = '<div class="media"><div class="pull-left" href="#"><img class="media-object img-thumbnail" src="' +
-                streetviewURL +
-                '" alt="streetview image"></div><div class="media-body"><h4 class="media-heading">' +
-                place.name + '</h4>' + place.vicinity + '<br>';
+            var weatherInfo,
+                contentString = 'Loading data...',
+                icon,
 
-            if (place.formatted_phone_number) contentString += place.formatted_phone_number +'<br>';
-            if (place.url) contentString += '<a href="' +
-                place.url +
-                '">Google+</a>';
-            contentString += '</div></div>';
+                lat = place.geometry.location.lat(),
+                lng = place.geometry.location.lng(),
+
+                url = "http://api.wunderground.com/api/"+ WUG_API_KEY + "/geolookup/conditions/forecaset/q/" + lat + "," + lng + ".json";
 
             infoWindow.setContent(contentString);
+
+            $.ajax({
+                url: url,
+                dataType : "json",
+                success : function( parsed_json ) {
+                    weatherInfo = 'The weather here is ' + parsed_json.current_observation.weather + '.';
+                    icon = parsed_json.current_observation.icon_url;
+
+                    contentString = '<div class="media"><div class="pull-left" href="#"><img class="media-object img-thumbnail" src="' + icon +'" alt="wheater image"></div><div class="media-body"><h4 class="media-heading">' +
+                        place.name + '</h4><p>' + weatherInfo + '</p>' + place.vicinity + '<br>';
+
+                    if (place.formatted_phone_number) contentString += place.formatted_phone_number +'<br>';
+                    if (place.url) contentString += '<a href="' +
+                        place.url +
+                        '">Google+</a>';
+                    contentString += '</div></div>';
+
+                    infoWindow.setContent(contentString);
+                }
+            })
+            .fail(function() {
+                alert( "Weather Underground failed to return weather info!");
+            });
         }
     }
 
@@ -202,7 +226,7 @@ function viewModel() {
     var input = $('#input')[0];
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-    map.controls[google.maps.ControlPosition.LEFT_TOP].push(filter);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(filter);
     var searchBox = new google.maps.places.SearchBox(input);
 
     // Listen for the event fired when the user selects an item from the search box

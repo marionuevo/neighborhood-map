@@ -43,9 +43,12 @@
                 </div>
 
                 <div class="navmenu navmenu-default navmenu-fixed-left offcanvas-sm">
-                    <a class="navmenu-brand visible-md visible-lg" href="#">Popular Business</a>
+                    <a class="navmenu-brand visible-md visible-lg" href="#">
+                        <span class="small">weather data provided by:</span>
+                        <img class="img-responsive" src="http://icons.wxug.com/logos/PNG/wundergroundLogo_4c_horz.png" alt="weather-underground.logo">
+                    </a>
                     <div class="nav navmenu-nav list-group scrollable-menu" data-bind="foreach: locations">
-                        <span data-bind="if: $data.visible">
+                        <span class="" data-bind="if: $data.visible">
                             <a id="item-list" class="list-group-item" href="#" data-bind="click: $root.showdata, text: $data.place.name, css: { active: $data.active }"></a>
                         </span>
                     </div>
@@ -61,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyA1M3f3N43jYmYt1l297n8cn8xGKTd_GYQ"></script>
         <script src="js/jQuery.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jasny-bootstrap.min.js"></script>
