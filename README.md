@@ -1,4 +1,4 @@
-# neighborhood-map project
+# Neighborhood-map Project
 
 ### Description
 This SPA starts with a map containing the more popular business in Adeje, Canary Islands, Spain.
@@ -13,10 +13,13 @@ Then, you might search for additional or special type of business, eg: restauran
 using the SearchBox on the top left. eg: type "restaurants" and press Enter or click on one
 of the autocomplete search suggestions.
 
-On the left places list, you can click to display details and a Streetview thumbnail of
+Also, you could filter the search results typing at the filter box.
+
+On the left places list, you can click to display details and weather information at
 that place. You can click on the place directly on the map, as well.
 
 Enjoy!
 
 Resources used:
-https://developers.google.com/maps/documentation/javascript/reference?hl=es
+* https://developers.google.com/maps/documentation/javascript/reference?hl=es
+* http://www.wunderground.com/weather/api/d/docs?d=index
